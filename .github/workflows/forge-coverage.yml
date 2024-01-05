@@ -1,0 +1,53 @@
+name: "Measure test coverage for a Forge project"
+
+on:
+  workflow_call:
+    inputs:
+      cache-path:
+        default: |
+          cache
+          node_modules
+          out
+          out-optimized
+        required: false
+        type: "string"
+
+      match-path:
+        required: true
+        type: "string"
+
+      restore-cache:
+        default: true
+        required: false
+        type: boolean
+
+jobs:
+  forge-coverage:
+    runs-on: "ubuntu-latest"
+    steps:
+      - name: "Check out the repo"
+        uses: "actions/checkout@v4"
+
+      - name: "Install Foundry"
+        uses: "foundry-rs/foundry-toolchain@v1"
+
+      - name: "Restore the cached build and the node modules"
+        if: ${{ inputs.restore-cache }}
+        uses: "actions/cache/restore@v3"
+        with:
+          fail-on-cache-miss: true
+          key: "build-and-modules-${{ github.sha }}"
+          path: ${{ inputs.cache-path }}
+
+      - name: "Generate the coverage report using the unit and the integration tests"
+        run: 'forge coverage --match-path "${{ inputs.match-path }}" --report lcov'
+
+      - name: "Upload coverage report to Codecov"
+        uses: "codecov/codecov-action@v3"
+        with:
+          files: "./lcov.info"
+
+      - name: "Add summary"
+        run: |
+          echo "## Coverage result" >> $GITHUB_STEP_SUMMARY
+          echo "✅ Uploaded to Codecov" >> $GITHUB_STEP_SUMMARY

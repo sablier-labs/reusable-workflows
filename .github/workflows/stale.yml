@@ -1,0 +1,59 @@
+name: "Close stale issues and PRs"
+
+on:
+  workflow_call:
+    inputs:
+      days-before-issue-close:
+        default: 14
+        required: false
+        type: "number"
+      days-before-issue-stale:
+        default: 182
+        required: false
+        type: "number"
+      days-before-pr-close:
+        default: 7
+        required: false
+        type: "number"
+      days-before-pr-stale:
+        default: 90
+        required: false
+        type: "number"
+      exempt-issue-labels:
+        default: "help,priority0"
+        required: false
+        type: "string"
+      operations-per-run:
+        default: 1000
+        required: false
+        type: number
+
+jobs:
+  stale:
+    runs-on: "ubuntu-latest"
+    steps:
+      - uses: "actions/stale@v9"
+        with:
+          close-issue-message:
+            "This issue was closed because it has been stalled for ${{ inputs.days-before-issue-close }} days with no
+            activity."
+          close-issue-reason: "not_planned"
+          close-pr-message:
+            "This PR was closed because it has been stalled for ${{ inputs.days-before-pr-close }} days with no
+            activity."
+          days-before-issue-close: ${{ inputs.days-before-issue-close }}
+          days-before-issue-stale: ${{ inputs.days-before-issue-stale }}
+          days-before-pr-close: ${{ inputs.days-before-pr-close }}
+          days-before-pr-stale: ${{ inputs.days-before-pr-stale }}
+          exempt-issue-labels: ${{ inputs.exempt-issue-labels }}
+          operations-per-run: ${{ inputs.operations-per-run }}
+          stale-issue-label: "stale"
+          stale-issue-message:
+            'This issue is stale because it has been open ${{ inputs.days-before-issue-stale}} days with no activity.
+            Leave a comment or remove the "stale" label, otherwise this will be closed in ${{
+            inputs.days-before-issue-close}} days.'
+          stale-pr-label: "stale"
+          stale-pr-message:
+            'This PR is stale because it has been open ${{ inputs.days-before-pr-stale}} days with no activity. Leave a
+            comment or remove the "stale" label, otherwise this will be closed in ${{ inputs.days-before-pr-close}}
+            days.'

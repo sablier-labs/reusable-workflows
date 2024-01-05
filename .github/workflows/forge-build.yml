@@ -1,0 +1,71 @@
+name: "Build a Forge project"
+
+on:
+  workflow_call:
+    inputs:
+      cache-path:
+        default: |
+          cache
+          node_modules
+          out
+          out-optimized
+        required: false
+        type: "string"
+
+      save-cache:
+        default: true
+        required: false
+        type: boolean
+
+      store-artifacts:
+        default: true
+        required: false
+        type: boolean
+
+jobs:
+  forge-build:
+    runs-on: "ubuntu-latest"
+    steps:
+      - name: "Check out the repo"
+        uses: "actions/checkout@v4"
+
+      - name: "Install Foundry"
+        uses: "foundry-rs/foundry-toolchain@v1"
+
+      - name: "Install Bun"
+        uses: "oven-sh/setup-bun@v1"
+
+      - name: "Install the Node.js dependencies"
+        run: "bun install --frozen-lockfile"
+
+      - name: "Show the Forge config"
+        run: "forge config"
+
+      - name: "Build the production contracts"
+        run: "FOUNDRY_PROFILE=optimized forge build"
+
+      - name: "Build the test contracts"
+        run: "FOUNDRY_PROFILE=test-optimized forge build"
+
+      - name: "Cache the contracts and the node modules so that they can be re-used by the other jobs"
+        if: ${{ inputs.save-cache }}
+        uses: "actions/cache/save@v3"
+        with:
+          key: "build-and-modules-${{ github.sha }}"
+          path: ${{ inputs.cache-path }}
+
+      - name: "Prepare the contract artifacts"
+        if: ${{ inputs.store-artifacts }}
+        run: "./shell/prepare-artifacts.sh"
+
+      - name: "Store the contract artifacts in CI"
+        if: ${{ inputs.store-artifacts }}
+        uses: "actions/upload-artifact@v3"
+        with:
+          name: "contract-artifacts"
+          path: "artifacts"
+
+      - name: "Add summary"
+        run: |
+          echo "## Build result" >> $GITHUB_STEP_SUMMARY
+          echo "✅ Passed" >> $GITHUB_STEP_SUMMARY

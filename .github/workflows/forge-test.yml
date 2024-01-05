@@ -1,0 +1,94 @@
+name: "Test a Forge project"
+
+on:
+  workflow_call:
+    inputs:
+      cache-path:
+        default: |
+          cache
+          node_modules
+          out
+          out-optimized
+        required: false
+        type: "string"
+
+      foundry-fuzz-runs:
+        default: 1000
+        required: false
+        type: "number"
+
+      foundry-invariant-depth:
+        default: 20
+        required: false
+        type: "number"
+
+      foundry-invariant-runs:
+        default: 20
+        required: false
+        type: "number"
+
+      foundry-profile:
+        default: "default"
+        required: false
+        type: "string"
+
+      fuzz-seed:
+        default: false
+        required: false
+        type: boolean
+
+      match-path:
+        required: true
+        type: "string"
+
+      name:
+        default: "Forge"
+        required: false
+        type: "string"
+
+      restore-cache:
+        default: true
+        required: false
+        type: boolean
+
+    secrets:
+      RPC_URL_MAINNET:
+        required: false
+
+jobs:
+  forge-test:
+    env:
+      FOUNDRY_INVARIANT_DEPTH: ${{ inputs.foundry-invariant-depth }}
+      FOUNDRY_INVARIANT_RUNS: ${{ inputs.foundry-invariant-runs }}
+      FOUNDRY_FUZZ_RUNS: ${{ inputs.foundry-fuzz-runs }}
+      FOUNDRY_PROFILE: ${{ inputs.foundry-profile }}
+      RPC_URL_MAINNET: ${{ secrets.RPC_URL_MAINNET }}
+    runs-on: "ubuntu-latest"
+    steps:
+      - name: "Check out the repo"
+        uses: "actions/checkout@v4"
+
+      - name: "Install Foundry"
+        uses: "foundry-rs/foundry-toolchain@v1"
+
+      - name: "Restore the cached build and the node modules"
+        if: ${{ inputs.restore-cache }}
+        uses: "actions/cache/restore@v3"
+        with:
+          fail-on-cache-miss: true
+          key: "build-and-modules-${{ github.sha }}"
+          path: ${{ inputs.cache-path }}
+
+      - name: "Generate fuzz seed that changes weekly to avoid burning through RPC allowance"
+        if: ${{ inputs.fuzz-seed }}
+        run: |
+          seed=$(echo $(($EPOCHSECONDS / 604800)))
+          echo "FOUNDRY_FUZZ_SEED=$seed" >> $GITHUB_ENV
+
+      - name: "Run the tests"
+        run: 'forge test --match-path "${{ inputs.match-path }}"'
+
+      - name: "Add summary"
+        run: |
+          echo "## ${{ inputs.name }} result" >> $GITHUB_STEP_SUMMARY
+          echo "✅ Passed" >> $GITHUB_STEP_SUMMARY
