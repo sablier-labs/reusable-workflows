@@ -33,7 +33,7 @@ jobs:
 
       - name: "Restore the cached build and the node modules"
         if: ${{ inputs.restore-cache }}
-        uses: "actions/cache/restore@v3"
+        uses: "actions/cache/restore@v4"
         with:
           fail-on-cache-miss: true
           key: "build-and-modules-${{ github.sha }}"
@@ -43,7 +43,7 @@ jobs:
         run: 'forge coverage --match-path "${{ inputs.match-path }}" --report lcov'
 
       - name: "Upload coverage report to Codecov"
-        uses: "codecov/codecov-action@v3"
+        uses: "codecov/codecov-action@v4"
         with:
           files: "./lcov.info"
 
