@@ -21,6 +21,10 @@ on:
         required: false
         type: boolean
 
+    secrets:
+      CODECOV_TOKEN:
+        required: true
+
 jobs:
   forge-coverage:
     runs-on: "ubuntu-latest"
@@ -33,7 +37,7 @@ jobs:
 
       - name: "Restore the cached build and the node modules"
         if: ${{ inputs.restore-cache }}
-        uses: "actions/cache/restore@v3"
+        uses: "actions/cache/restore@v4"
         with:
           fail-on-cache-miss: true
           key: "build-and-modules-${{ github.sha }}"
@@ -46,6 +50,7 @@ jobs:
         uses: "codecov/codecov-action@v3"
         with:
           files: "./lcov.info"
+          token: ${{ secrets.CODECOV_TOKEN }}
 
       - name: "Add summary"
         run: |

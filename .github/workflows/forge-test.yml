@@ -73,7 +73,7 @@ jobs:
 
       - name: "Restore the cached build and the node modules"
         if: ${{ inputs.restore-cache }}
-        uses: "actions/cache/restore@v3"
+        uses: "actions/cache/restore@v4"
         with:
           fail-on-cache-miss: true
           key: "build-and-modules-${{ github.sha }}"
