@@ -52,7 +52,7 @@ on:
         type: boolean
 
     secrets:
-      RPC_URL_MAINNET:
+      MAINNET_RPC_URL:
         required: false
 
 jobs:
@@ -62,7 +62,7 @@ jobs:
       FOUNDRY_INVARIANT_RUNS: ${{ inputs.foundry-invariant-runs }}
       FOUNDRY_FUZZ_RUNS: ${{ inputs.foundry-fuzz-runs }}
       FOUNDRY_PROFILE: ${{ inputs.foundry-profile }}
-      RPC_URL_MAINNET: ${{ secrets.RPC_URL_MAINNET }}
+      MAINNET_RPC_URL: ${{ secrets.MAINNET_RPC_URL }}
     runs-on: "ubuntu-latest"
     steps:
       - name: "Check out the repo"
