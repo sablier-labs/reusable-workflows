@@ -1,0 +1,32 @@
+name: "Check with Bulloak that Solidity tests follow BTT guidelines"
+
+on:
+  workflow_call:
+    inputs:
+      skip-modifiers:
+        default: true
+        required: false
+        type: boolean
+
+      tree-path:
+        default: "test/**/**.tree"
+        required: false
+        type: string
+
+jobs:
+  bulloak-check:
+    runs-on: "ubuntu-latest"
+    steps:
+      - name: "Check out the repo"
+        uses: "actions/checkout@v4"
+
+      - name: "Install and run Bulloak"
+        uses: "smol-ninja/bulloak-verifier@v0.1.0"
+        with:
+          skip-modifiers: ${{ inputs.skip-modifiers }}
+          tree-path: ${{ inputs.tree-path }}
+
+      - name: "Bulloak summary"
+        run: |
+          echo "## Bulloak result" >> $GITHUB_STEP_SUMMARY
+          echo "✅ Passed" >> $GITHUB_STEP_SUMMARY

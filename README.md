@@ -16,9 +16,10 @@ This repository contains a collection of reusable GitHub Actions workflows.
 
 ### Miscellaneous
 
-| Name                                   | Description                |
-| -------------------------------------- | -------------------------- |
-| [stale](./.github/workflows/stale.yml) | Close stale issues and PRs |
+| Name                                                   | Description                                     |
+| ------------------------------------------------------ | ----------------------------------------------- |
+| [bulloak-check](./.github/workflows/bulloak-check.yml) | Check that Solidity tests follow BTT guidelines |
+| [stale](./.github/workflows/stale.yml)                 | Close stale issues and PRs                      |
 
 ## References
 
