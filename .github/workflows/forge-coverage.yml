@@ -19,7 +19,7 @@ on:
       restore-cache:
         default: true
         required: false
-        type: boolean
+        type: "boolean"
 
     secrets:
       CODECOV_TOKEN:
