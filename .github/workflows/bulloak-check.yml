@@ -6,12 +6,12 @@ on:
       skip-modifiers:
         default: true
         required: false
-        type: boolean
+        type: "boolean"
 
       tree-path:
         default: "test/**/**.tree"
         required: false
-        type: string
+        type: "string"
 
 jobs:
   bulloak-check:
