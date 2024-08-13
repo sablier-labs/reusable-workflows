@@ -1,4 +1,4 @@
-name: "Check with Bulloak that Solidity tests follow BTT guidelines"
+name: "Check with Bulloak that Solidity tests conform to BTT spec"
 
 on:
   workflow_call:
