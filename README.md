@@ -6,13 +6,14 @@ This repository contains a collection of reusable GitHub Actions workflows.
 
 ### Ethereum
 
-| Name                                                       | Description                               |
-| ---------------------------------------------------------- | ----------------------------------------- |
-| [forge-build](./.github/workflows/forge-build.yml)         | Build a Forge project                     |
-| [forge-coverage](./.github/workflows/forge-coverage.yml)   | Measure test coverage for a Forge project |
-| [forge-lint](./.github/workflows/forge-lint.yml)           | Lint a Forge project                      |
-| [forge-test](./.github/workflows/forge-test.yml)           | Test a Forge project                      |
-| [slither-analyze](./.github/workflows/slither-analyze.yml) | Analyze an Ethereum project with Slither  |
+| Name                                                       | Description                                                |
+| ---------------------------------------------------------- | ---------------------------------------------------------- |
+| [bulloak-check](./.github/workflows/bulloak-check.yml)     | Check with Bulloak that Solidity tests conform to BTT spec |
+| [forge-build](./.github/workflows/forge-build.yml)         | Build a Forge project                                      |
+| [forge-coverage](./.github/workflows/forge-coverage.yml)   | Measure test coverage for a Forge project                  |
+| [forge-lint](./.github/workflows/forge-lint.yml)           | Lint a Forge project                                       |
+| [forge-test](./.github/workflows/forge-test.yml)           | Test a Forge project                                       |
+| [slither-analyze](./.github/workflows/slither-analyze.yml) | Analyze an Ethereum project with Slither                   |
 
 ### Miscellaneous
 
