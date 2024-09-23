@@ -86,7 +86,7 @@ jobs:
           echo "FOUNDRY_FUZZ_SEED=$seed" >> $GITHUB_ENV
 
       - name: "Run the tests"
-        run: 'forge test --match-path "${{ inputs.match-path }}" -vvv'
+        run: 'forge test --match-path "${{ inputs.match-path }}"'
 
       - name: "Add summary"
         run: |
