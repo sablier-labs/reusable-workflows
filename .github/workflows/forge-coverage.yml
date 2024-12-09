@@ -24,9 +24,13 @@ on:
     secrets:
       CODECOV_TOKEN:
         required: true
+      MAINNET_RPC_URL:
+        required: false
 
 jobs:
   forge-coverage:
+    env:
+      MAINNET_RPC_URL: ${{ secrets.MAINNET_RPC_URL }}
     runs-on: "ubuntu-latest"
     steps:
       - name: "Check out the repo"
