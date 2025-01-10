@@ -18,7 +18,7 @@ on:
         type: "boolean"
 
       store-artifacts:
-        default: true
+        default: false
         required: false
         type: "boolean"
 
