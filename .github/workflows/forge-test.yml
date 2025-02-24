@@ -51,11 +51,6 @@ on:
         required: false
         type: "boolean"
 
-      install-python:
-        default: false
-        required: false
-        type: "boolean"
-
     secrets:
       MAINNET_RPC_URL:
         required: false
@@ -83,12 +78,6 @@ jobs:
           fail-on-cache-miss: true
           key: "build-and-modules-${{ github.sha }}"
           path: ${{ inputs.cache-path }}
-
-      - name: "Install Python"
-        if: ${{ inputs.install-python }}
-        uses: actions/setup-python@v4
-        with:
-          python-version: "3.13"
 
       - name: "Generate fuzz seed that changes weekly to avoid burning through RPC allowance"
         if: ${{ inputs.fuzz-seed }}
