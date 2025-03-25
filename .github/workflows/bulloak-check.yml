@@ -9,7 +9,7 @@ on:
         type: "boolean"
 
       tree-path:
-        default: "test/**/**.tree"
+        default: "tests/**/**.tree"
         required: false
         type: "string"
 
@@ -28,5 +28,5 @@ jobs:
 
       - name: "Bulloak summary"
         run: |
-          echo "## Bulloak result" >> $GITHUB_STEP_SUMMARY
+          echo "## Bulloak Check result" >> $GITHUB_STEP_SUMMARY
           echo "✅ Passed" >> $GITHUB_STEP_SUMMARY

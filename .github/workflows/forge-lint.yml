@@ -21,7 +21,7 @@ jobs:
       - name: "Lint the code"
         run: "bun run lint"
 
-      - name: "Lint summary"
+      - name: "Add summary"
         run: |
-          echo "## Lint result" >> $GITHUB_STEP_SUMMARY
+          echo "## Forge Lint result" >> $GITHUB_STEP_SUMMARY
           echo "✅ Passed" >> $GITHUB_STEP_SUMMARY
