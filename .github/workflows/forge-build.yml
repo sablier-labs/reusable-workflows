@@ -67,5 +67,5 @@ jobs:
 
       - name: "Add summary"
         run: |
-          echo "## Build result" >> $GITHUB_STEP_SUMMARY
+          echo "## Forge Build result" >> $GITHUB_STEP_SUMMARY
           echo "✅ Passed" >> $GITHUB_STEP_SUMMARY

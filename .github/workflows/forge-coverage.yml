@@ -21,6 +21,7 @@ on:
         required: false
         type: "boolean"
 
+      # This flag allows coverage with via-ir enabled for the "minimum amount of optimization" necessary.
       via-ir-minimum:
         default: false
         required: false
@@ -44,7 +45,7 @@ jobs:
       - name: "Install Foundry"
         uses: "foundry-rs/foundry-toolchain@v1"
 
-      - name: "Restore the cached build and the node modules"
+      - name: "Restore the cached build and node modules"
         if: ${{ inputs.restore-cache }}
         uses: "actions/cache/restore@v4"
         with:
@@ -52,13 +53,12 @@ jobs:
           key: "build-and-modules-${{ github.sha }}"
           path: ${{ inputs.cache-path }}
 
-      - name: "Generate the coverage report using the unit and the integration tests"
-        run: |
-          if [ "${{ inputs.via-ir-minimum }}" == "true" ]; then
-            forge coverage --match-path "${{ inputs.match-path }}" --report lcov --ir-minimum
-          else
-            forge coverage --match-path "${{ inputs.match-path }}" --report lcov
-          fi
+      - name: "Generate the coverage report"
+        run: >-
+          forge coverage
+          --match-path "${{ inputs.match-path }}"
+          --report lcov
+          ${{ inputs.via-ir-minimum == 'true' && '--ir-minimum' || '' }}
 
       - name: "Upload coverage report to Codecov"
         uses: "codecov/codecov-action@v4"
@@ -68,5 +68,5 @@ jobs:
 
       - name: "Add summary"
         run: |
-          echo "## Coverage result" >> $GITHUB_STEP_SUMMARY
+          echo "## Forge Coverage result" >> $GITHUB_STEP_SUMMARY
           echo "✅ Uploaded to Codecov" >> $GITHUB_STEP_SUMMARY

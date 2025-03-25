@@ -93,5 +93,5 @@ jobs:
 
       - name: "Add summary"
         run: |
-          echo "## ${{ inputs.name }} result" >> $GITHUB_STEP_SUMMARY
+          echo "## Forge Test result for ${{ inputs.name }}" >> $GITHUB_STEP_SUMMARY
           echo "✅ Passed" >> $GITHUB_STEP_SUMMARY

@@ -4,7 +4,11 @@ This repository contains a collection of reusable GitHub Actions workflows.
 
 ## Tables
 
-### Ethereum
+### EVM
+
+Note that several workflows require the smart contract artifacts and the node modules to be cached before running. The
+`forge-build` workflow handles this automatically. So you may need to run `forge-build` before, for example,
+`forge-coverage`.
 
 | Name                                                       | Description                                                |
 | ---------------------------------------------------------- | ---------------------------------------------------------- |
@@ -31,9 +35,13 @@ This repository contains a collection of reusable GitHub Actions workflows.
 
 A list of repositories that depend on this one.
 
-If we make changes to this repo, we will most likely need to update the dependents as well.
+If we make changes to this repo, we may need to update the dependents as well.
 
 - [sablier-labs/airdrops](https://github.com/sablier-labs/airdrops/)
+- [sablier-labs/evm-utils](https://github.com/sablier-labs/evm-utils/)
 - [sablier-labs/flow](https://github.com/sablier-labs/flow/)
-- [sablier-labs/lockup](https://github.com/sablier-labs/v2-core/)
-- [sablier-labs/v2-periphery](https://github.com/sablier-labs/v2-periphery) (will be archived)
+- [sablier-labs/lockup](https://github.com/sablier-labs/lockup/)
+
+## License
+
+This project is licensed under MIT.
