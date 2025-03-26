@@ -54,11 +54,12 @@ jobs:
           path: ${{ inputs.cache-path }}
 
       - name: "Generate the coverage report"
-        run: >-
-          forge coverage
-          --match-path "${{ inputs.match-path }}"
-          --report lcov
-          ${{ inputs.via-ir-minimum == 'true' && '--ir-minimum' || '' }}
+        run: |
+          if [ "${{ inputs.via-ir-minimum }}" == "true" ]; then
+            forge coverage --match-path "${{ inputs.match-path }}" --report lcov --ir-minimum
+          else
+            forge coverage --match-path "${{ inputs.match-path }}" --report lcov
+          fi
 
       - name: "Upload coverage report to Codecov"
         uses: "codecov/codecov-action@v4"
