@@ -2,13 +2,9 @@
 
 This repository contains a collection of reusable GitHub Actions workflows.
 
-## Tables
+## Workflows
 
 ### EVM
-
-Note that several workflows require the smart contract artifacts and the node modules to be cached before running. The
-`forge-build` workflow handles this automatically. So you may need to run `forge-build` before, for example,
-`forge-coverage`.
 
 | Name                                                       | Description                                                |
 | ---------------------------------------------------------- | ---------------------------------------------------------- |
@@ -19,11 +15,19 @@ Note that several workflows require the smart contract artifacts and the node mo
 | [forge-test](./.github/workflows/forge-test.yml)           | Test a Forge project                                       |
 | [slither-analyze](./.github/workflows/slither-analyze.yml) | Analyze an Ethereum project with Slither                   |
 
-### Miscellaneous
+### Other
 
 | Name                                   | Description                |
 | -------------------------------------- | -------------------------- |
 | [stale](./.github/workflows/stale.yml) | Close stale issues and PRs |
+
+## Notes
+
+- The workflows are opinionated and may not fit your needs. For example, we use Bun for managing Node.js dependencies
+  and running scripts.
+- Several workflows require the smart contract artifacts and the node modules to be cached before running. The
+  `forge-build` workflow handles this automatically. So you may need to run `forge-build` before, for example,
+  `forge-coverage`.
 
 ## References
 
