@@ -5,8 +5,8 @@ on:
     inputs:
       cache-path:
         default: |
+          ~/.bun/install/cache
           cache
-          node_modules
           out
           out-optimized
         required: false
@@ -32,8 +32,19 @@ jobs:
       - name: "Install Foundry"
         uses: "foundry-rs/foundry-toolchain@v1"
 
+      - name:
+          "Cache the contracts and the node modules. If a match is found for the key, the cache is restored. Otherwise,
+          a new cache will be created."
+        if: ${{ inputs.save-cache }}
+        uses: "actions/cache@v4"
+        with:
+          key: "build-and-modules-${{ github.sha }}"
+          path: ${{ inputs.cache-path }}
+
       - name: "Install Bun"
-        uses: "oven-sh/setup-bun@v1"
+        uses: "oven-sh/setup-bun@v2"
+        with:
+          bun-version: "latest"
 
       - name: "Install the Node.js dependencies"
         run: "bun install --frozen-lockfile"
@@ -46,13 +57,6 @@ jobs:
 
       - name: "Build the test contracts"
         run: "FOUNDRY_PROFILE=test-optimized forge build"
-
-      - name: "Cache the contracts and the node modules so that they can be re-used by the other jobs"
-        if: ${{ inputs.save-cache }}
-        uses: "actions/cache/save@v4"
-        with:
-          key: "build-and-modules-${{ github.sha }}"
-          path: ${{ inputs.cache-path }}
 
       - name: "Prepare the contract artifacts"
         if: ${{ inputs.store-artifacts }}
