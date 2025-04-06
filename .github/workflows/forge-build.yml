@@ -5,7 +5,6 @@ on:
     inputs:
       cache-path:
         default: |
-          ~/.bun/install/cache
           cache
           node_modules
           out
