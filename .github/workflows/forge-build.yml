@@ -22,6 +22,13 @@ on:
         required: false
         type: "boolean"
 
+      foundry-profiles:
+        default: |
+          optimized
+          test-optimized
+        required: false
+        type: "string"
+
 jobs:
   forge-build:
     runs-on: "ubuntu-latest"
@@ -52,11 +59,15 @@ jobs:
       - name: "Show the Forge config"
         run: "forge config"
 
-      - name: "Build the production contracts"
-        run: "FOUNDRY_PROFILE=optimized forge build"
-
-      - name: "Build the test contracts"
-        run: "FOUNDRY_PROFILE=test-optimized forge build"
+      - name: "Build contracts with specified profiles"
+        run: |
+          # Read profiles from the input and build for each one
+          echo "${{ inputs.foundry-profiles }}" | while read profile; do
+            if [ -n "$profile" ]; then
+              echo "Building with profile: $profile"
+              FOUNDRY_PROFILE=$profile forge build
+            fi
+          done
 
       - name: "Prepare the contract artifacts"
         if: ${{ inputs.store-artifacts }}
