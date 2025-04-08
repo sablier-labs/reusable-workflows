@@ -71,11 +71,24 @@ jobs:
       - name: "Check out the repo"
         uses: "actions/checkout@v4"
 
+      - name: "Check for file changes"
+        uses: dorny/paths-filter@v3
+        id: filter
+        with:
+          filters: |
+            solidity:
+              - "src/**"
+              - "tests/**"
+              - "foundry.toml"
+              - "package.json"
+              - "bun.lockb"
+
       - name: "Install Foundry"
+        if: steps.filter.outputs.solidity == 'true'
         uses: "foundry-rs/foundry-toolchain@v1"
 
       - name: "Restore the cached build and the node modules"
-        if: ${{ inputs.restore-cache }}
+        if: ${{ inputs.restore-cache && steps.filter.outputs.solidity == 'true' }}
         uses: "actions/cache/restore@v4"
         with:
           fail-on-cache-miss: true
@@ -83,15 +96,16 @@ jobs:
           path: ${{ inputs.cache-path }}
 
       - name: "Generate fuzz seed that changes weekly to avoid burning through RPC allowance"
-        if: ${{ inputs.fuzz-seed }}
+        if: ${{ inputs.fuzz-seed && steps.filter.outputs.solidity == 'true' }}
         run: |
           seed=$(echo $(($EPOCHSECONDS / 604800)))
           echo "FOUNDRY_FUZZ_SEED=$seed" >> $GITHUB_ENV
 
       - name: "Run the tests"
+        if: steps.filter.outputs.solidity == 'true'
         run: 'forge test --match-path "${{ inputs.match-path }}"'
 
       - name: "Add summary"
-        run: |
+        run: | # shell
           echo "## Forge Test result for ${{ inputs.name }}" >> $GITHUB_STEP_SUMMARY
           echo "✅ Passed" >> $GITHUB_STEP_SUMMARY

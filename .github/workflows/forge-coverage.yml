@@ -42,11 +42,24 @@ jobs:
       - name: "Check out the repo"
         uses: "actions/checkout@v4"
 
+      - name: "Check for file changes"
+        uses: dorny/paths-filter@v3
+        id: filter
+        with:
+          filters: |
+            solidity:
+              - "src/**"
+              - "tests/**"
+              - "foundry.toml"
+              - "package.json"
+              - "bun.lockb"
+
       - name: "Install Foundry"
+        if: steps.filter.outputs.solidity == 'true'
         uses: "foundry-rs/foundry-toolchain@v1"
 
       - name: "Restore the cached build and node modules"
-        if: ${{ inputs.restore-cache }}
+        if: ${{ inputs.restore-cache && steps.filter.outputs.solidity == 'true' }}
         uses: "actions/cache/restore@v4"
         with:
           fail-on-cache-miss: true
@@ -54,6 +67,7 @@ jobs:
           path: ${{ inputs.cache-path }}
 
       - name: "Generate the coverage report"
+        if: steps.filter.outputs.solidity == 'true'
         run: |
           if [ "${{ inputs.via-ir-minimum }}" == "true" ]; then
             forge coverage --match-path "${{ inputs.match-path }}" --report lcov --ir-minimum
@@ -62,12 +76,13 @@ jobs:
           fi
 
       - name: "Upload coverage report to Codecov"
+        if: steps.filter.outputs.solidity == 'true'
         uses: "codecov/codecov-action@v4"
         with:
           files: "./lcov.info"
           token: ${{ secrets.CODECOV_TOKEN }}
 
       - name: "Add summary"
-        run: |
+        run: | # shell
           echo "## Forge Coverage result" >> $GITHUB_STEP_SUMMARY
           echo "✅ Uploaded to Codecov" >> $GITHUB_STEP_SUMMARY
