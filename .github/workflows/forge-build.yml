@@ -71,7 +71,15 @@ jobs:
 
       - name: "Prepare the contract artifacts"
         if: ${{ inputs.store-artifacts }}
-        run: "./shell/prepare-artifacts.sh"
+        run: |
+          if [ -f "./shell/prepare-artifacts.sh" ]; then
+            "./shell/prepare-artifacts.sh"
+          elif [ -f "./scripts/bash/prepare-artifacts.sh" ]; then
+            "./scripts/bash/prepare-artifacts.sh"
+          else
+            echo "Error: Could not find prepare-artifacts.sh in either ./shell or ./scripts/bash directories"
+            exit 1
+          fi
 
       - name: "Store the contract artifacts in CI"
         if: ${{ inputs.store-artifacts }}
