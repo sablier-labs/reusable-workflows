@@ -12,22 +12,18 @@ on:
         required: false
         type: "string"
 
-      save-cache:
-        default: true
-        required: false
-        type: "boolean"
-
-      store-artifacts:
-        default: false
-        required: false
-        type: "boolean"
-
       foundry-profiles:
         default: |
           optimized
           test-optimized
+        description: "The Foundry profiles for which to build the contracts"
         required: false
         type: "string"
+
+      save-cache:
+        default: true
+        required: false
+        type: "boolean"
 
 jobs:
   forge-build:
@@ -59,26 +55,14 @@ jobs:
       - name: "Show the Forge config"
         run: "forge config"
 
-      - name: "Build contracts with specified profiles"
-        run: |
-          # Read profiles from the input and build for each one
+      - name: "Build contracts with the specified profiles"
+        run: | # shell
           echo "${{ inputs.foundry-profiles }}" | while read profile; do
             if [ -n "$profile" ]; then
               echo "Building with profile: $profile"
               FOUNDRY_PROFILE=$profile forge build
             fi
           done
-
-      - name: "Prepare the contract artifacts"
-        if: ${{ inputs.store-artifacts }}
-        run: "./shell/prepare-artifacts.sh"
-
-      - name: "Store the contract artifacts in CI"
-        if: ${{ inputs.store-artifacts }}
-        uses: "actions/upload-artifact@v4"
-        with:
-          name: "contract-artifacts"
-          path: "artifacts"
 
       - name: "Add summary"
         run: |
