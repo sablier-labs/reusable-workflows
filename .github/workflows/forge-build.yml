@@ -15,6 +15,7 @@ on:
       foundry-profiles:
         default: |
           optimized
+          test-optimized
         description: "Foundry profiles for which to build the contracts, end line-separated"
         required: false
         type: "string"
