@@ -42,14 +42,9 @@ on:
         type: "string"
 
       name:
-        default: "Forge"
+        default: "Forge tests"
         required: false
         type: "string"
-
-      restore-cache:
-        default: true
-        required: false
-        type: "boolean"
 
     secrets:
       API_KEY_INFURA:
@@ -74,12 +69,10 @@ jobs:
       - name: "Install Foundry"
         uses: "foundry-rs/foundry-toolchain@v1"
 
-      - name: "Restore the cached build and the node modules"
-        if: ${{ inputs.restore-cache }}
-        uses: "actions/cache/restore@v4"
+      - name: "Restore the cached build"
+        uses: "./github/actions/cache.yml"
         with:
           fail-on-cache-miss: true
-          key: "build-and-modules-${{ github.sha }}"
           path: ${{ inputs.cache-path }}
 
       - name: "Generate fuzz seed that changes weekly to avoid burning through RPC allowance"
@@ -92,6 +85,6 @@ jobs:
         run: 'forge test --match-path "${{ inputs.match-path }}"'
 
       - name: "Add summary"
-        run: |
-          echo "## Forge Test result for ${{ inputs.name }}" >> $GITHUB_STEP_SUMMARY
+        run: | # shell
+          echo "## Result for ${{ inputs.name }}" >> $GITHUB_STEP_SUMMARY
           echo "✅ Passed" >> $GITHUB_STEP_SUMMARY

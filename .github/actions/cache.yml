@@ -1,0 +1,37 @@
+name: "Cache Forge Artifacts and Node.js Dependencies"
+description: "Internal composite action for reusing caching logic"
+
+inputs:
+  cache-path:
+    required: true
+    type: "string"
+  fail-on-cache-miss:
+    default: false
+    description: "If true, fails if cache is missing"
+    required: false
+
+outputs:
+  cache-hit:
+    description: "Indicates if a cache hit occurred"
+    value: ${{ steps.cache-step.outputs.cache-hit }}
+
+runs:
+  using: "composite"
+  steps:
+    - uses: "actions/cache@v4"
+      id: "cache-step"
+      with:
+        fail-on-cache-miss: ${{ inputs.fail-on-cache-miss }}
+        path: ${{ inputs.cache-path }}
+
+        # Primary cache key composed of:
+        #   1. Hash of bun lockfile
+        #   1. Hash of foundry.toml config file
+        #   3. Hash of all Solidity files
+        key: |
+          "forge-build-${{ hashFiles('bun.lock') }}-${{ hashFiles('foundry.toml') }}-${{ hashFiles('**/*.sol') }}"
+
+        # See https://stackoverflow.com/a/79575296/3873510
+        restore-keys: |
+          forge-build-${{ hashFiles('bun.lock') }}-${{ hashFiles('foundry.toml') }}
+          forge-build-${{ hashFiles('bun.lock') }}

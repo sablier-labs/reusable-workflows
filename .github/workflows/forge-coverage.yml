@@ -16,11 +16,6 @@ on:
         required: true
         type: "string"
 
-      restore-cache:
-        default: true
-        required: false
-        type: "boolean"
-
       # This flag allows coverage with via-ir enabled for the "minimum amount of optimization" necessary.
       via-ir-minimum:
         default: false
@@ -45,12 +40,10 @@ jobs:
       - name: "Install Foundry"
         uses: "foundry-rs/foundry-toolchain@v1"
 
-      - name: "Restore the cached build and node modules"
-        if: ${{ inputs.restore-cache }}
-        uses: "actions/cache/restore@v4"
+      - name: "Restore the cached build"
+        uses: "./github/actions/cache.yml"
         with:
           fail-on-cache-miss: true
-          key: "build-and-modules-${{ github.sha }}"
           path: ${{ inputs.cache-path }}
 
       - name: "Generate the coverage report"
