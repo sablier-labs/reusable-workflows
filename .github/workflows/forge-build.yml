@@ -40,7 +40,7 @@ jobs:
       - name: "Cache Foundry artifacts and Node.js dependencies. If a cache is found for the primary key, the cache is
           restored. Otherwise, a new cache is created."
         id: "cache-step"
-        uses: "./.github/actions/cache"
+        uses: ".github/actions/cache"
         with:
           cache-path: ${{ inputs.cache-path }}
 
