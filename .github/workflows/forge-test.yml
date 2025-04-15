@@ -81,7 +81,6 @@ jobs:
               - "tests/**"
               - "foundry.toml"
               - "package.json"
-              - "bun.lockb"
 
       - name: "Install Foundry"
         if: steps.filter.outputs.solidity == 'true'
