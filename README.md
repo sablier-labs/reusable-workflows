@@ -2,13 +2,13 @@
 
 Reusable GitHub Actions utilities for Sablier projects.
 
-## Workflows
-
-### Actions
+## Actions
 
 | Name                                          | Description        |
 | --------------------------------------------- | ------------------ |
 | [cache](.github/actions/evm-cache/action.yml) | Cache EVM projects |
+
+## Workflows
 
 ### EVM
 
