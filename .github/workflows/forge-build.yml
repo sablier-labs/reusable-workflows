@@ -37,8 +37,8 @@ jobs:
       - name: "Install Foundry"
         uses: "foundry-rs/foundry-toolchain@v1"
 
-      - name: "Cache Foundry artifacts and Node.js dependencies. If a cache is found for the primary key, the cache is
-          restored. Otherwise, a new cache is created."
+      # If a cache is found for the primary key, the cache is restored. Otherwise, a new cache is created.
+      - name: "Cache Foundry artifacts and Node.js dependencies"
         id: "cache-step"
         uses: "sablier-labs/reusable-workflows/.github/actions/cache@ci/proper-cache"
         with:

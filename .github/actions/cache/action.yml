@@ -29,7 +29,7 @@ runs:
         #   1. Hash of foundry.toml config file
         #   3. Hash of all Solidity files
         key: |
-          "forge-build-${{ hashFiles('bun.lock') }}-${{ hashFiles('foundry.toml') }}-${{ hashFiles('**/*.sol') }}"
+          forge-build-${{ hashFiles('bun.lock') }}-${{ hashFiles('foundry.toml') }}-${{ hashFiles('**/*.sol') }}
 
         # See https://stackoverflow.com/a/79575296/3873510
         restore-keys: |
