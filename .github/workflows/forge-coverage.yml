@@ -41,7 +41,7 @@ jobs:
         uses: "foundry-rs/foundry-toolchain@v1"
 
       - name: "Restore the cached build"
-        uses: "./github/actions/cache.yml"
+        uses: "sablier-labs/reusable-workflows/.github/actions/cache.yml@ci/proper-cache"
         with:
           fail-on-cache-miss: true
           path: ${{ inputs.cache-path }}
