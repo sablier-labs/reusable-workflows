@@ -1,4 +1,4 @@
-name: "Close stale issues and PRs"
+name: "Cron: Close Stale Issues and PRs"
 
 on:
   workflow_call:
