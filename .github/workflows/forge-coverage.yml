@@ -43,8 +43,8 @@ jobs:
       - name: "Restore the cached build"
         uses: "sablier-labs/reusable-workflows/.github/actions/cache@ci/proper-cache"
         with:
+          cache-path: ${{ inputs.cache-path }}
           fail-on-cache-miss: true
-          path: ${{ inputs.cache-path }}
 
       - name: "Generate the coverage report"
         run: | # shell

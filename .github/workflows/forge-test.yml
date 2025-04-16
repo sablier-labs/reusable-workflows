@@ -72,8 +72,8 @@ jobs:
       - name: "Restore the cached build"
         uses: "sablier-labs/reusable-workflows/.github/actions/cache@ci/proper-cache"
         with:
+          cache-path: ${{ inputs.cache-path }}
           fail-on-cache-miss: true
-          path: ${{ inputs.cache-path }}
 
       - name: "Generate fuzz seed that changes weekly to avoid burning through RPC allowance"
         if: ${{ inputs.fuzz-seed }}
