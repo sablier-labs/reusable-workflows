@@ -3,10 +3,10 @@ description: "Internal composite action for reusing caching logic"
 
 inputs:
   cache-path:
+    description: "Paths to cache"
     required: true
-    type: "string"
   fail-on-cache-miss:
-    default: false
+    default: "false"
     description: "If true, fails if cache is missing"
     required: false
 
