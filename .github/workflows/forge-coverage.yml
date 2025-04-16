@@ -41,7 +41,7 @@ jobs:
         uses: "foundry-rs/foundry-toolchain@v1"
 
       - name: "Restore the cached build"
-        uses: "sablier-labs/gha-utils/.github/actions/evm-cache@ci/proper-cache"
+        uses: "sablier-labs/gha-utils/.github/actions/evm-cache@main"
         with:
           cache-path: ${{ inputs.cache-path }}
           fail-on-cache-miss: true
