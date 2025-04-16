@@ -21,15 +21,16 @@ on:
         type: "string"
 
     outputs:
-      cache-hit:
-        description: "Indicates whether a cache hit occurred on the cache step"
-        value: ${{ jobs.forge-build.outputs.cache-hit }}
+      # See https://github.com/actions/cache/issues/1566
+      cache-status:
+        description: "Descriptive cache status: 'primary', 'fallback', or 'not-found'"
+        value: ${{ jobs.forge-build.outputs.cache-status }}
 
 jobs:
   forge-build:
     runs-on: "ubuntu-latest"
     outputs:
-      cache-hit: ${{ steps.cache-step.outputs.cache-hit }}
+      cache-status: ${{ steps.cache-step.outputs.cache-status }}
     steps:
       - name: "Check out the repo"
         uses: "actions/checkout@v4"

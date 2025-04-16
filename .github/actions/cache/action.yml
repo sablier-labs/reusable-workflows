@@ -11,9 +11,9 @@ inputs:
     required: false
 
 outputs:
-  cache-hit:
-    description: "Indicates if a cache hit occurred"
-    value: ${{ steps.cache-step.outputs.cache-hit }}
+  cache-status:
+    description: "Descriptive cache status: 'primary', 'fallback', or 'not-found'"
+    value: ${{ steps.determine-cache-status.outputs.status }}
 
 runs:
   using: "composite"
@@ -35,3 +35,16 @@ runs:
         restore-keys: |
           forge-build-${{ hashFiles('bun.lock') }}-${{ hashFiles('foundry.toml') }}
           forge-build-${{ hashFiles('bun.lock') }}
+
+    # Interpret cache-hit output into three-part cache-status. See https://github.com/actions/cache/issues/1566
+    - name: "Determine cache status"
+      id: determine-cache-status
+      shell: bash
+      run: | # shell
+        if [[ "${{ steps.cache-step.outputs.cache-hit }}" == "true" ]]; then
+          echo "status=primary" >> $GITHUB_OUTPUT
+        elif [[ "${{ steps.cache-step.outputs.cache-hit }}" == "false" ]]; then
+          echo "status=fallback" >> $GITHUB_OUTPUT
+        else
+          echo "status=not-found" >> $GITHUB_OUTPUT
+        fi
