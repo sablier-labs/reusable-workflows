@@ -24,6 +24,6 @@ jobs:
         run: "bun run lint"
 
       - name: "Add summary"
-        run: |
+        run: | # shell
           echo "## Forge Lint result" >> $GITHUB_STEP_SUMMARY
           echo "✅ Passed" >> $GITHUB_STEP_SUMMARY

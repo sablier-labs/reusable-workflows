@@ -1,4 +1,4 @@
-name: "Build a Forge project"
+name: "Build a Forge project and cache the artifacts and the dependencies"
 
 on:
   workflow_call:
@@ -16,18 +16,21 @@ on:
         default: |
           optimized
           test-optimized
-        description: "The Foundry profiles for which to build the contracts"
+        description: "Foundry profiles for which to build the contracts, end line-separated"
         required: false
         type: "string"
 
-      save-cache:
-        default: true
-        required: false
-        type: "boolean"
+    outputs:
+      # See https://github.com/actions/cache/issues/1566
+      cache-status:
+        description: "Descriptive cache status: 'primary', 'fallback', or 'not-found'"
+        value: ${{ jobs.forge-build.outputs.cache-status }}
 
 jobs:
   forge-build:
     runs-on: "ubuntu-latest"
+    outputs:
+      cache-status: ${{ steps.cache-step.outputs.cache-status }}
     steps:
       - name: "Check out the repo"
         uses: "actions/checkout@v4"
@@ -35,14 +38,12 @@ jobs:
       - name: "Install Foundry"
         uses: "foundry-rs/foundry-toolchain@v1"
 
-      - name:
-          "Cache the contracts and the node modules. If a match is found for the key, the cache is restored. Otherwise,
-          a new cache will be created."
-        if: ${{ inputs.save-cache }}
-        uses: "actions/cache@v4"
+      # If a cache is found for the primary key, the cache is restored. Otherwise, a new cache is created.
+      - name: "Cache Foundry artifacts and Node.js dependencies"
+        id: "cache-step"
+        uses: "sablier-labs/reusable-workflows/.github/actions/cache@ci/proper-cache"
         with:
-          key: "build-and-modules-${{ github.sha }}"
-          path: ${{ inputs.cache-path }}
+          cache-path: ${{ inputs.cache-path }}
 
       - name: "Install Bun"
         uses: "oven-sh/setup-bun@v2"
@@ -65,6 +66,6 @@ jobs:
           done
 
       - name: "Add summary"
-        run: |
+        run: | # shell
           echo "## Forge Build result" >> $GITHUB_STEP_SUMMARY
           echo "✅ Passed" >> $GITHUB_STEP_SUMMARY

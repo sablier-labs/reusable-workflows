@@ -27,6 +27,6 @@ jobs:
           tree-path: ${{ inputs.tree-path }}
 
       - name: "Bulloak summary"
-        run: |
+        run: | # shell
           echo "## Bulloak Check result" >> $GITHUB_STEP_SUMMARY
           echo "✅ Passed" >> $GITHUB_STEP_SUMMARY

@@ -1,0 +1,50 @@
+name: "Cache Forge Artifacts and Node.js Dependencies"
+description: "Internal composite action for reusing caching logic"
+
+inputs:
+  cache-path:
+    description: "Paths to cache"
+    required: true
+  fail-on-cache-miss:
+    default: "false"
+    description: "If true, fails if cache is missing"
+    required: false
+
+outputs:
+  cache-status:
+    description: "Descriptive cache status: 'primary', 'fallback', or 'not-found'"
+    value: ${{ steps.determine-cache-status.outputs.status }}
+
+runs:
+  using: "composite"
+  steps:
+    - uses: "actions/cache@v4"
+      id: "cache-step"
+      with:
+        fail-on-cache-miss: ${{ inputs.fail-on-cache-miss }}
+        path: ${{ inputs.cache-path }}
+
+        # Primary cache key composed of:
+        #   1. Hash of bun lockfile
+        #   1. Hash of foundry.toml config file
+        #   3. Hash of all Solidity files
+        key: |
+          forge-build-${{ hashFiles('bun.lock') }}-${{ hashFiles('foundry.toml') }}-${{ hashFiles('**/*.sol') }}
+
+        # See https://stackoverflow.com/a/79575296/3873510
+        restore-keys: |
+          forge-build-${{ hashFiles('bun.lock') }}-${{ hashFiles('foundry.toml') }}
+          forge-build-${{ hashFiles('bun.lock') }}
+
+    # Interpret cache-hit output into three-part cache-status. See https://github.com/actions/cache/issues/1566
+    - name: "Determine cache status"
+      id: determine-cache-status
+      shell: bash
+      run: | # shell
+        if [[ "${{ steps.cache-step.outputs.cache-hit }}" == "true" ]]; then
+          echo "status=primary" >> $GITHUB_OUTPUT
+        elif [[ "${{ steps.cache-step.outputs.cache-hit }}" == "false" ]]; then
+          echo "status=fallback" >> $GITHUB_OUTPUT
+        else
+          echo "status=not-found" >> $GITHUB_OUTPUT
+        fi
