@@ -47,7 +47,7 @@ jobs:
           path: ${{ inputs.cache-path }}
 
       - name: "Generate the coverage report"
-        run: |
+        run: | # shell
           if [ "${{ inputs.via-ir-minimum }}" == "true" ]; then
             forge coverage --match-path "${{ inputs.match-path }}" --report lcov --ir-minimum
           else
@@ -61,6 +61,6 @@ jobs:
           token: ${{ secrets.CODECOV_TOKEN }}
 
       - name: "Add summary"
-        run: |
+        run: | # shell
           echo "## Forge Coverage result" >> $GITHUB_STEP_SUMMARY
           echo "✅ Uploaded to Codecov" >> $GITHUB_STEP_SUMMARY

@@ -34,6 +34,6 @@ jobs:
           sarif_file: ${{ steps.slither.outputs.sarif }}
 
       - name: "Add summary"
-        run: |
+        run: | # shell
           echo "## Slither result" >> $GITHUB_STEP_SUMMARY
           echo "✅ Uploaded to GitHub code scanning" >> $GITHUB_STEP_SUMMARY
