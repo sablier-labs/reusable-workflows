@@ -1,3 +1,5 @@
+# DEPRECATED: see ./full-check.yml
+# Kept for backward compatibility, but will be removed in the future
 name: "Lint an EVM project"
 
 on: "workflow_call"
