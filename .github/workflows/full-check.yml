@@ -1,0 +1,42 @@
+name: "Full check a project"
+
+on:
+  workflow_call:
+    inputs:
+      check_command:
+        default: "full:check"
+        description: 'The lint command to run (default: "full:check)"'
+        required: false
+        type: string
+      install_foundry:
+        default: true
+        description: "Whether to install Foundry (default: true)"
+        required: false
+        type: boolean
+
+jobs:
+  evm-lint:
+    runs-on: "ubuntu-latest"
+    steps:
+      - name: "Check out the repo"
+        uses: "actions/checkout@v4"
+
+      - name: "Install Foundry"
+        if: ${{ inputs.install_foundry }}
+        uses: "foundry-rs/foundry-toolchain@v1"
+
+      - name: "Install Bun"
+        uses: "oven-sh/setup-bun@v2"
+        with:
+          bun-version: "latest"
+
+      - name: "Install the Node.js dependencies"
+        run: "bun install --frozen-lockfile"
+
+      - name: "Full check the code"
+        run: "bun run ${{ inputs.check_command }}" # Biome, Forge, Prettier, Solhint, etc.
+
+      - name: "Add summary"
+        run: | # shell
+          echo "## Full Check result" >> $GITHUB_STEP_SUMMARY
+          echo "✅ Passed" >> $GITHUB_STEP_SUMMARY
