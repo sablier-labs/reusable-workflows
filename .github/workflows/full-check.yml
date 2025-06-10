@@ -39,6 +39,9 @@ jobs:
         with:
           bun-version: "latest"
 
+      - name: "Install Ni package manager resolver"
+        run: "npm install -g @antfu/ni"
+
       - name: "Install the Node.js dependencies"
         run: "bun install --frozen-lockfile"
 
